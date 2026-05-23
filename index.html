@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Siddhesh Hirve — ML Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --border: #1e1e2e;
+      --accent: #7c6af7;
+      --accent2: #38d9a9;
+      --text: #e8e8f0;
+      --muted: #6b6b8a;
+      --tag-bg: #1a1a2e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* grid bg */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,106,247,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,106,247,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* glow blob */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(124,106,247,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,15,0.7);
+    }
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 140px 0 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-label::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.6rem, 7vw, 4.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 .line2 {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(232,232,240,0.3);
+    }
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
+    }
+    .hero-desc strong { color: var(--text); font-weight: 500; }
+    .hero-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover { background: #6a58e8; border-color: #6a58e8; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 3rem;
+    }
+    .section-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .skill-cell {
+      background: var(--surface);
+      padding: 1.25rem 1.5rem;
+      transition: background 0.2s;
+    }
+    .skill-cell:hover { background: #14141e; }
+    .skill-cell-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      background: var(--tag-bg);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+    }
+
+    /* ── EXPERIENCE ── */
+    .exp-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2));
+    }
+    .exp-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 1.25rem;
+    }
+    .exp-company {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+    }
+    .exp-role {
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-top: 2px;
+      font-weight: 400;
+    }
+    .exp-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+    }
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .exp-bullets li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding-left: 1.2rem;
+      position: relative;
+      line-height: 1.65;
+    }
+    .exp-bullets li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid { display: flex; flex-direction: column; gap: 1.5rem; }
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      transition: border-color 0.25s, transform 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card:hover {
+      border-color: rgba(124,106,247,0.4);
+      transform: translateY(-2px);
+    }
+    .project-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top left, rgba(124,106,247,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .project-card:hover::after { opacity: 1; }
+    .project-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .project-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+    }
+    .project-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      white-space: nowrap;
+      padding-top: 3px;
+    }
+    .project-stack { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1rem; }
+    .stack-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.67rem;
+      background: rgba(124,106,247,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(124,106,247,0.2);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+    .project-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+    .project-highlight {
+      margin-top: 0.75rem;
+      padding: 0.6rem 0.9rem;
+      background: rgba(56,217,169,0.06);
+      border-left: 2px solid var(--accent2);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.82rem;
+      color: rgba(56,217,169,0.9);
+      font-weight: 500;
+    }
+
+    /* ── CERTS ── */
+    .certs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .cert-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: border-color 0.2s;
+    }
+    .cert-card:hover { border-color: rgba(124,106,247,0.35); }
+    .cert-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(124,106,247,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .cert-name { font-size: 0.88rem; font-weight: 500; line-height: 1.4; margin-bottom: 4px; }
+    .cert-issuer { font-size: 0.75rem; color: var(--muted); }
+    .cert-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 6px;
+    }
+    .cert-link:hover { text-decoration: underline; }
+
+    /* ── CONTACT ── */
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .contact-item:hover { border-color: var(--accent); color: var(--text); }
+    .contact-item svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 0;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero h1 { font-size: 2.4rem; }
+      section { padding: 52px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a class="nav-logo" href="#">SSH<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- HERO -->
+    <header class="hero fade-up">
+      <p class="hero-label">ML Engineer & AI Builder</p>
+      <h1>
+        Siddhesh<br>
+        <span class="line2">Hirve</span>
+      </h1>
+      <p class="hero-desc">
+        Final-year <strong>E&TC student at VIIT Pune</strong> building production-grade ML systems — from real-time computer vision on factory floors to RAG pipelines over financial documents.
+      </p>
+      <div class="hero-links">
+        <a href="https://github.com/siddheshhirve" target="_blank" class="btn btn-primary">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          GitHub
+        </a>
+        <a href="https://linkedin.com/in/siddhesh-hirve" target="_blank" class="btn btn-outline">LinkedIn</a>
+        <a href="mailto:siddhesh.hirve234@gmail.com" class="btn btn-outline">Email</a>
+      </div>
+    </header>
+
+    <!-- SKILLS -->
+    <section id="skills" class="fade-up">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2 class="section-title">Technical Skills</h2>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-cell">
+          <div class="skill-cell-label">ML & Deep Learning</div>
+          <div class="skill-tags">
+            <span class="tag">PyTorch</span><span class="tag">scikit-learn</span><span class="tag">HuggingFace</span><span class="tag">ONNX Runtime</span><span class="tag">Fine-tuning</span>
+          </div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Generative AI & LLMs</div>
+          <div class="skill-tags">
+            <span class="tag">LangChain</span><span class="tag">RAG Pipelines</span><span class="tag">OpenAI API</span><span class="tag">Pinecone</span><span class="tag">Prompt Eng.</span>
+          </div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Computer Vision & NLP</div>
+          <div class="skill-tags">
+            <span class="tag">OpenCV</span><span class="tag">YOLOv12</span><span class="tag">EasyOCR</span><span class="tag">DistilBERT</span><span class="tag">BLIP VLM</span>
+          </div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">MLOps & Deployment</div>
+          <div class="skill-tags">
+            <span class="tag">Flask</span><span class="tag">Docker</span><span class="tag">REST APIs</span><span class="tag">FAISS</span><span class="tag">Streamlit</span>
+          </div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Languages</div>
+          <div class="skill-tags">
+            <span class="tag">Python</span><span class="tag">C++</span><span class="tag">Java</span><span class="tag">SQL</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience" class="fade-up">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Experience</h2>
+      </div>
+      <div class="exp-card">
+        <div class="exp-header">
+          <div>
+            <div class="exp-company">Whirlpool Corporation</div>
+            <div class="exp-role">Machine Learning Intern — Computer Vision & QA Automation</div>
+          </div>
+          <span class="exp-date">Aug 2025 – Feb 2026</span>
+        </div>
+        <ul class="exp-bullets">
+          <li>Built a display-monitoring system with YOLOv12 and OpenCV that checked washing machine screens every 500 ms, fully replacing manual observation during 2–4 hour production cycles.</li>
+          <li>Fixed overfitting in early model versions using L1/L2 regularisation and image augmentation (brightness, blur, noise) to handle low-clarity webcam conditions on the actual production floor.</li>
+          <li>Resolved a data leakage issue where validation accuracy was misleadingly high — traced to incorrect train/test split and imbalanced classes; fixed with stratified splits and SMOTE oversampling.</li>
+          <li>Added EasyOCR to catch 1–2 second warning codes the base detector missed; piped all output into a structured CSV log for QA team review.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="fade-up">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Projects</h2>
+      </div>
+      <div class="projects-grid">
+
+        <div class="project-card">
+          <div class="project-top">
+            <div class="project-name">Embedding-Based Semantic Search Engine</div>
+            <span class="project-date">Mar – May 2026</span>
+          </div>
+          <div class="project-stack">
+            <span class="stack-tag">Python</span><span class="stack-tag">sentence-transformers</span><span class="stack-tag">FAISS</span><span class="stack-tag">HuggingFace</span><span class="stack-tag">Flask</span>
+          </div>
+          <p class="project-desc">Semantic search pipeline over 500K+ documents. Benchmarked three encoders on a held-out query set and settled on bge-small-en for best domain-specific recall. Exposed via Flask REST API with a modular encoder interface for easy model swapping.</p>
+          <div class="project-highlight">↑ 29% search relevance over TF-IDF baseline in user simulation tests</div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-top">
+            <div class="project-name">Real-Time Content Moderation System</div>
+            <span class="project-date">Feb – Apr 2026</span>
+          </div>
+          <div class="project-stack">
+            <span class="stack-tag">Python</span><span class="stack-tag">HuggingFace</span><span class="stack-tag">DistilBERT</span><span class="stack-tag">ONNX Runtime</span><span class="stack-tag">Flask</span>
+          </div>
+          <p class="project-desc">Fine-tuned DistilBERT on 200K labeled social media posts for toxicity classification. Exported to ONNX Runtime; DistilBERT matched BERT-base accuracy within 0.4% at ~40% lower inference cost — making it the clear production choice.</p>
+          <div class="project-highlight">91% precision · &lt;50 ms inference — suitable for real-time feed filtering</div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-top">
+            <div class="project-name">LLM-Powered Financial Document Q&A (RAG)</div>
+            <span class="project-date">May 2026</span>
+          </div>
+          <div class="project-stack">
+            <span class="stack-tag">Python</span><span class="stack-tag">LangChain</span><span class="stack-tag">OpenAI API</span><span class="stack-tag">Pinecone</span><span class="stack-tag">PyMuPDF</span><span class="stack-tag">Streamlit</span>
+          </div>
+          <p class="project-desc">RAG pipeline over corporate annual reports and SEC filings. Ingests with PyMuPDF, chunks with overlap, and indexes into Pinecone using OpenAI embeddings. Multi-turn Q&A with LangChain ConversationalRetrievalChain; evaluated with RAGAS (faithfulness, context recall).</p>
+          <div class="project-highlight">Grounded answers score significantly higher on RAGAS faithfulness vs. no-retrieval baseline</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CERTS -->
+    <section id="certs" class="fade-up">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Certifications</h2>
+      </div>
+      <div class="certs-grid">
+        <div class="cert-card">
+          <div class="cert-icon">🎓</div>
+          <div>
+            <div class="cert-name">Supervised ML: Regression & Classification</div>
+            <div class="cert-issuer">DeepLearning.AI & Stanford · Coursera · Apr 2026</div>
+            <a class="cert-link" href="https://coursera.org/verify/AEU0TQW7AFE5" target="_blank">↗ Verify certificate</a>
+          </div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-icon">🏅</div>
+          <div>
+            <div class="cert-name">Certificate Program in AI & Machine Learning</div>
+            <div class="cert-issuer">FutureSkills Prime · NASSCOM / MeitY · Gold (80/100) · Mar 2026</div>
+            <span class="cert-link">ID: FSP/2026/3/10259838</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="fade-up">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2 class="section-title">Get In Touch</h2>
+      </div>
+      <p style="color: var(--muted); font-size: 0.95rem; max-width: 480px;">
+        Open to ML engineering roles, research collaborations, and internships. Final year at VIIT Pune — available from May 2026.
+      </p>
+      <div class="contact-row">
+        <a href="mailto:siddhesh.hirve234@gmail.com" class="contact-item">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          siddhesh.hirve234@gmail.com
+        </a>
+        <a href="https://github.com/siddheshhirve" target="_blank" class="contact-item">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          GitHub
+        </a>
+        <a href="https://linkedin.com/in/siddhesh-hirve" target="_blank" class="contact-item">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="tel:+917620235773" class="contact-item">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          +91 7620235773
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>© 2026 Siddhesh Sachin Hirve · Built with HTML/CSS · Hosted on GitHub Pages</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
